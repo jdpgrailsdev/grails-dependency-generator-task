@@ -2,6 +2,7 @@ package org.gradle.grails.dependency.task
 
 import groovy.xml.MarkupBuilder
 
+import org.codehaus.groovy.grails.resolve.EnhancedDefaultDependencyDescriptor
 import org.codehaus.groovy.grails.resolve.GrailsCoreDependencies
 import org.codehaus.groovy.grails.resolve.IvyDependencyManager
 import org.codehaus.groovy.grails.resolve.config.DependencyConfigurationConfigurer
@@ -15,6 +16,12 @@ import org.slf4j.LoggerFactory
 
 import grails.util.BuildSettings
 
+/**
+ * Gradle task for generating a Grails Dependency POM file.  The dependency POM file
+ * contains the dependencies required by a Grails application at runtime.
+ *
+ * @author Jonathan Pearlin
+ */
 class GrailsDependencyGenerationTask extends DefaultTask {
 
 	static final Logger slf4jLogger = LoggerFactory.getLogger(GrailsDependencyGenerationTask.name)
@@ -102,7 +109,7 @@ class GrailsDependencyGenerationTask extends DefaultTask {
 	 * @returns The group ID value to be used in a Maven POM file.
 	 */
 	def getMavenizedGroupId(def moduleId) {
-		moduleId.getOrganisation() != '*' ? moduleId.getOrganisation() : moduleId.getName()
+		moduleId.getOrganisation() != EnhancedDefaultDependencyDescriptor.WILDCARD ? moduleId.getOrganisation() : moduleId.getName()
 	}
 	
 	/**
