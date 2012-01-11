@@ -44,8 +44,8 @@ class GrailsDependencyGenerationTask extends DefaultTask {
 		
 			def file = new File('pom.xml')
 			def writer = new FileWriter(file)
+			writer.write('<?xml version="1.0" encoding="utf-8"?>\r\n')
 			def xml = new MarkupBuilder(writer)
-			xml.xmlDeclaration([version:'1.0', encoding:'utf-8'])
 			xml.project('xmlns':'http://maven.apache.org/POM/4.0.0', 'xmlns:xsi':'http://www.w3.org/2001/XMLSchema-instance',
 			    'xsi:schemaLocation':'http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd') {
 				modelVersion { mkp.yield '4.0.0'}				
@@ -57,14 +57,26 @@ class GrailsDependencyGenerationTask extends DefaultTask {
 				description { mkp.yield 'POM file containing Grails dependencies.' }
 				url { mkp.yield 'http://grails.org' }
 				dependencies {
-					dependencyManager.dependencies.each { dep ->
-					//TODO exclude dependencies not required for WAR runtime
-						dependency {
-							groupId { mkp.yield dep.getOrganisation() }
-							artifactId { mkp.yield dep.getName() }
-							version { mkp.yield dep.getRevision() }
-						}
-					}				
+					dependencyManager.dependencyDescriptors.each { descriptor ->
+						if(isValidScope(descriptor.scope)) {
+							def dep = descriptor.getDependencyRevisionId()
+							dependency {
+								groupId { mkp.yield dep.getOrganisation() }
+								artifactId { mkp.yield dep.getName() }
+								version { mkp.yield dep.getRevision() }
+								if(descriptor.getAllExcludeRules()) {
+									exclusions {
+										descriptor.getAllExcludeRules().each { ex ->
+											exclusion {
+												groupId { mkp.yield ex.getId().getModuleId().getOrganisation() }
+												artifactId { mkp.yield ex.getId().getModuleId().getName() }												
+											}
+										}
+									}
+								}
+							}
+						}																				
+					}			
 				}
 				repositories {
 			        repository {
@@ -82,4 +94,13 @@ class GrailsDependencyGenerationTask extends DefaultTask {
 			slf4jLogger.error("Failed to generate dependencies POM file.  Grails version must be set!")
 		}
 	}
+	
+	/**
+	 * Check to see if the scope is one that is required at runtime by Grails (i.e. exclude all build script related dependencies).
+	 * @param scope The scope of a dependency.
+	 * @returns {@code true} if the dependency can be included or {@code false} if it should be skipped.
+	 */
+	def isValidScope(def scope) {
+		'compile'.equals(scope) || 'provided'.equals(scope) || 'runtime'.equals(scope)
+	}	
 }
