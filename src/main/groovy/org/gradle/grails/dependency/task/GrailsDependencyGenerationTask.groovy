@@ -67,8 +67,8 @@ class GrailsDependencyGenerationTask extends DefaultTask {
 								if(descriptor.getAllExcludeRules()) {
 									exclusions {
 										descriptor.getAllExcludeRules().each { ex ->
-											exclusion {
-												groupId { mkp.yield ex.getId().getModuleId().getOrganisation() }
+											exclusion {												
+												groupId { mkp.yield getMavenizedGroupId(ex.getId().getModuleId()) }
 												artifactId { mkp.yield ex.getId().getModuleId().getName() }												
 											}
 										}
@@ -93,6 +93,16 @@ class GrailsDependencyGenerationTask extends DefaultTask {
 		} else {
 			slf4jLogger.error("Failed to generate dependencies POM file.  Grails version must be set!")
 		}
+	}
+	
+	/**
+	 * Returns the "Mavenized" group Id for a module.  This method handles the "*" used by
+	 * Ivy when a group ID (or "organisation" is not provided).
+	 * @param moduleId An Ivy module ID instance.
+	 * @returns The group ID value to be used in a Maven POM file.
+	 */
+	def getMavenizedGroupId(def moduleId) {
+		moduleId.getOrganisation() != '*' ? moduleId.getOrganisation() : moduleId.getName()
 	}
 	
 	/**
