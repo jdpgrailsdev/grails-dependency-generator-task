@@ -7,7 +7,7 @@ version = grailsVersion
 
 repositories {
 	mavenLocal()
-	mavenRepo(urls:'http://repo.grails.org/grails/core')
+	mavenRepo(url:'http://repo.grails.org/grails/core')
 }
 
 dependencies {

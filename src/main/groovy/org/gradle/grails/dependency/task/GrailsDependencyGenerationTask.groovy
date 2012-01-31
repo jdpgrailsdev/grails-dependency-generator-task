@@ -92,6 +92,19 @@ class GrailsDependencyGenerationTask extends DefaultTask {
 			            url { mkp.yield 'http://repo.grails.org/grails/core' }
 					}
 				}
+				distributionManagement {
+					repository {
+						id { mkp.yield 'artifactory' }
+						name { mkp.yield 'artifactory repo' }
+						url { mkp.yield 'http://repo.grails.org/grails/libs-releases-local' }
+					}
+					snapshotRepository {
+						uniqueVersion { mkp.yield 'true' }
+						id { mkp.yield 'artifactory' }
+						name { mkp.yield 'artifactory repo' }
+						url { mkp.yield 'http://repo.grails.org/grails/libs-snapshots-local' }
+					}					
+				}
 			}
 
 			writer.flush()
