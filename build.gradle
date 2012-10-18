@@ -1,17 +1,21 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
-grailsVersion = '2.0.1.BUILD-SNAPSHOT'
 group = 'org.grails'
-version = grailsVersion
+version = '1.0.0-SNAPSHOT'
 
 repositories {
 	mavenLocal()
-	mavenRepo(url:'http://repo.grails.org/grails/core')
+	maven {
+		url 'http://repo.grails.org/grails/core'
+	}
+	mavenCentral()
 }
 
 dependencies {
 	compile gradleApi()
-    compile "org.grails:grails-bootstrap:${grailsVersion}"
 	groovy localGroovy()
+    compile("org.grails:grails-bootstrap:${project.grailsVersion}") {
+		transitive = false
+	}	
 }
