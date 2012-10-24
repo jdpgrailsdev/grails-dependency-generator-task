@@ -19,18 +19,18 @@ class PomBuilder {
 	def grailsDependencies
 	String grailsVersion
 	File pomFile
-	DependencyScope scope
+	DependencyScope dependencyScope
 
 	/**
 	 * Constructs a new {@code PomBuilder} instance.
 	 * @param grailsVersion The version of Grails that will be used to generate the POM file.
-	 * @param scope The dependency scope used to filter the dependencies that will be used in the generated POM file.
+	 * @param dependencyScope The dependency scope used to filter the dependencies that will be used in the generated POM file.
 	 */
-	PomBuilder(String grailsVersion, DependencyScope scope) {
+	PomBuilder(String grailsVersion, DependencyScope dependencyScope) {
 		this.grailsVersion = grailsVersion
-		this.grailsDependencies = DependencyUtils.getGrailsDependencies(grailsVersion, scope)
+		this.grailsDependencies = DependencyUtils.getGrailsDependencies(grailsVersion, dependencyScope)
 		this.pomFile = new File('pom.xml')
-		this.scope = scope
+		this.dependencyScope = dependencyScope
 	}
 
 	/**
@@ -45,11 +45,11 @@ class PomBuilder {
 				'xsi:schemaLocation':'http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd') {
 				modelVersion { mkp.yield '4.0.0'}
 				groupId { mkp.yield 'org.grails' }
-				artifactId { mkp.yield "grails-${scope}-dependencies" }
+				artifactId { mkp.yield "grails-${dependencyScope}-dependencies" }
 				packaging { mkp.yield 'pom' }
 				version { mkp.yield grailsVersion }
 				name { mkp.yield 'Grails Dependencies' }
-				description { mkp.yield "POM file containing Grails ${scope} dependencies." }
+				description { mkp.yield "POM file containing Grails ${dependencyScope} dependencies." }
 				url { mkp.yield 'http://grails.org' }
 				dependencies {
 					grailsDependencies?.each { descriptor ->
@@ -58,6 +58,7 @@ class PomBuilder {
 							groupId { mkp.yield dep.getOrganisation() }
 							artifactId { mkp.yield dep.getName() }
 							version { mkp.yield dep.getRevision() }
+							scope { mkp.yield descriptor.getScope() }
 							if(descriptor.getAllExcludeRules()) {
 								exclusions {
 									descriptor.getAllExcludeRules().each { ex ->
@@ -93,7 +94,7 @@ class PomBuilder {
 				}
 			}
 
-			log.info("Successfully generated ${pomFile.getPath()} for scope ${scope}.")
+			log.info("Successfully generated ${pomFile.getPath()} for scope ${dependencyScope}.")
 		} finally {
 			writer?.flush()
 			writer?.close()
