@@ -1,4 +1,4 @@
-package org.gradle.grails.dependency.task
+package org.grails.gradle.task.dependency
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction

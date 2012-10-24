@@ -1,4 +1,4 @@
-package org.gradle.grails.dependency.util
+package org.grails.gradle.task.dependency.util
 
 import org.codehaus.groovy.grails.resolve.EnhancedDefaultDependencyDescriptor
 import org.codehaus.groovy.grails.resolve.GrailsCoreDependencies

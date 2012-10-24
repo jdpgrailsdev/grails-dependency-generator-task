@@ -1,4 +1,4 @@
-package org.gradle.grails.dependency.pom
+package org.grails.gradle.task.dependency.pom
 
 import groovy.xml.MarkupBuilder
 
