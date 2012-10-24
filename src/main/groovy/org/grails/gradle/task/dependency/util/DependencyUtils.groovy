@@ -13,6 +13,7 @@ import grails.util.BuildSettings
  * dependencies.
  * 
  * @author Jonathan Pearlin
+ * @since 1.0.0
  */
 class DependencyUtils {
 
@@ -27,20 +28,12 @@ class DependencyUtils {
 	}
 	
 	/**
-	 * Check to see if the scope is one that is required at runtime by Grails (i.e. exclude all build script related dependencies).
-	 * @param scope The scope of a dependency.
-	 * @returns {@code true} if the dependency can be included or {@code false} if it should be skipped.
-	 */
-	static def isValidScope(def scope) {
-		'compile'.equals(scope) || 'provided'.equals(scope) || 'runtime'.equals(scope)
-	}
-	
-	/**
 	 * Generates the list of dependencies used by the requested Grails version.
 	 * @param grailsVersion The version of Grails as a String.
-	 * @return The list of dependencies required to run the requested version of Grails.
+	 * @param scope A {@code DependencyScope} enumerated value that determines which dependencies to gather in order to create the POM file.
+	 * @return The list of dependencies required to run the requested version of Grails or an empty list if the Grails version is blank.
 	 */
-	static def getGrailsDependencies(def grailsVersion) {
+	static def getGrailsDependencies(def grailsVersion, def scope) {
 		if(grailsVersion) {
 			def coreDependencies = new GrailsCoreDependencies(grailsVersion)
 			def dependencyManager = new IvyDependencyManager("grails-dependency-generation-task", grailsVersion, new BuildSettings())
@@ -55,7 +48,7 @@ class DependencyUtils {
 			declarationClosure.setResolveStrategy(Closure.DELEGATE_FIRST)
 			declarationClosure.call()
 			
-			dependencyManager.dependencyDescriptors
+			dependencyManager.dependencyDescriptors.findAll { it.scope == scope.toString() }
 		} else {
 			[]
 		}
