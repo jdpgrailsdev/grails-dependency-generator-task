@@ -58,7 +58,7 @@ class PomBuilder {
 							groupId { mkp.yield dep.getOrganisation() }
 							artifactId { mkp.yield dep.getName() }
 							version { mkp.yield dep.getRevision() }
-							scope { mkp.yield descriptor.getScope() }
+							scope { mkp.yield dependencyScope.mavenScope }
 							if(descriptor.getAllExcludeRules()) {
 								exclusions {
 									descriptor.getAllExcludeRules().each { ex ->
@@ -94,7 +94,7 @@ class PomBuilder {
 				}
 			}
 
-			log.info("Successfully generated ${pomFile.getPath()} for scope ${dependencyScope}.")
+			log.info("Successfully generated ${pomFile.getPath()}.")
 		} finally {
 			writer?.flush()
 			writer?.close()

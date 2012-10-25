@@ -9,12 +9,25 @@ package org.grails.gradle.task.dependency.util
  */
 enum DependencyScope {
 
-	BUILD,
-	COMPILE,
-	DOCS,
-	PROVIDED,
-	RUNTIME,
-	TEST
+	BUILD('compile'),
+	COMPILE('compile'),
+	DOCS('compile'),
+	PROVIDED('provided'),
+	RUNTIME('runtime'),
+	TEST('test')
+
+	/**
+	 * The Maven scope that the enumerated value is mapped to.
+	 */
+	String mavenScope
+
+	/**
+	 * Constructs a new enumerated dependency scope value.
+	 * @param mavenScope The Maven scope that this dependency scope maps to.
+	 */
+	DependencyScope(String mavenScope) {
+		this.mavenScope = mavenScope
+	}
 
 	@Override
 	public String toString() {
