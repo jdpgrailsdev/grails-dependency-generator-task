@@ -8,7 +8,7 @@ Usage
 
 In order to use the Grails Dependency Generator Task, the project must first be built and pushed to a repository:
 
-	./gradle clean install
+	gradle clean install
 	
 Once the task JAR has been built and pushed to your local repository, you can use the task in any Gradle project:
 
@@ -37,6 +37,10 @@ Once the task JAR has been built and pushed to your local repository, you can us
     	grailsVersion = '2.1.1'
 		scope = 'runtime'
 	}
+	
+To run the task from your Gradle project, simply use the following:
+
+	gradle generate
 
 Parameters
 ----------
