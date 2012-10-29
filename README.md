@@ -56,8 +56,6 @@ The Gradle task generates a Maven POM file with the following GAV:
 	<version>${grailsVersion}</version>
 	
 where the `dependencyScope` is the value `scope` parameter passed to the task and the `grailsVersion` is the `grailsVersion` scoped also passed to the task. 
-
-The name of the generated POM file will be in the following format:  `grails-${scope}-dependencies.xml`.
 	
 Scopes
 ------
